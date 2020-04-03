@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 
 const Modal = props => {
   const closeButton = useRef(null);
@@ -6,12 +6,18 @@ const Modal = props => {
   const submitModal = () => {
     closeButton.current.click();
   };
+  
+  useEffect(() => {
+    if (props.createButtonClicked) {
+      submitModal()
+    }
+  }, [props.createButtonClicked])
 
   return (
     <>
       <button
         type="button"
-        className="btn btn-primary"
+        className="btn btn-primary mb-4"
         data-toggle="modal"
         data-target="#exampleModal"
       >
@@ -51,13 +57,14 @@ const Modal = props => {
               >
                 Close
               </button>
+
               <button
                 onClick={submitModal}
                 type="button"
                 className="btn btn-primary"
-                disabled={props.buttonState}
+                disabled={true}
               >
-                Save changes
+                Save Changes
               </button>
             </div>
           </div>

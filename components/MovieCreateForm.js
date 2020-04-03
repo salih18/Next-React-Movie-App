@@ -9,14 +9,30 @@ const INITIAL_FORM = {
   image: ""
 };
 
-const MovieCreateForm = ({ disableButton }) => {
-  const [form, setForm] = useState(INITIAL_FORM);
+const MovieCreateForm = ({
+  handleCreateMovie,
+  handleUpdateMovie,
+  handleButtonClicked,
+  initialData
+}) => {
+  // if there is editing action there is Initial data, otherwise empty initial form
+  const formData = initialData ? initialData : INITIAL_FORM;
+
+  const [form, setForm] = useState(formData);
+  const [disabled, setDisabled] = useState(true);
 
   const handleChange = e => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
-
+  const handleSubmitForCreate = async () => {
+    await handleCreateMovie(JSON.parse(JSON.stringify(form)));
+    handleButtonClicked(true);
+  };
+  const handleSubmitForUpdate = async (e) => {  
+    e.preventDefault()
+    await handleUpdateMovie(JSON.parse(JSON.stringify(form)));  
+  };
   const handleGenreChange = e => {
     const { selectedOptions } = e.target;
     setForm({
@@ -28,8 +44,9 @@ const MovieCreateForm = ({ disableButton }) => {
   useEffect(() => {
     const isCompleted = Object.values(form).every(el => Boolean(el));
     const isGenreSelected = form.genre.length > 0 ? true : false;
-    isCompleted && isGenreSelected ? disableButton(false) : disableButton(true);
+    isCompleted && isGenreSelected ? setDisabled(false) : setDisabled(true);
   }, [form]);
+
   return (
     <form>
       <div className="form-group">
@@ -119,6 +136,25 @@ const MovieCreateForm = ({ disableButton }) => {
           <option>fantasy</option>
         </select>
       </div>
+      {initialData ? (
+        <button
+          onClick={handleSubmitForUpdate}
+          type="button"
+          className="btn btn-warning"
+          disabled={disabled}
+        >
+          Update
+        </button>
+      ) : (
+        <button
+          onClick={handleSubmitForCreate}
+          type="button"
+          className="btn btn-primary"
+          disabled={disabled}
+        >
+          Create
+        </button>
+      )}
     </form>
   );
 };

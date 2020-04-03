@@ -10,7 +10,7 @@ const Layout = props => {
         <HeadContent />
       </Head>
       <Navbar />
-      <div className="container pt-1 " style={{'margin-top':'100px','min-height': 'calc(100vh - 70px)'}}> {props.children}</div>
+      <div className="container pt-1 " style={{'marginTop':'100px','minHeight': 'calc(100vh - 70px)'}}> {props.children}</div>
       <Footer />
     </>
   );

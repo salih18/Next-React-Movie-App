@@ -1,17 +1,31 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import Modal from "./Modal";
 import MovieCreateForm from "./MovieCreateForm";
+import { createMovie } from "./../actions";
 
 const SideMenu = ({ categories }) => {
-  const [disabled, setDisabled] = useState(true);
-  const disableButton = bool => setDisabled(bool);
+  const [createButtonClicked, setCreateButtonClicked] = useState(false);
+  const router = useRouter();
+
+  const handleCreateMovie = async movie => {
+    await createMovie(movie);
+    router.push("/");
+  };
+
+  const handleButtonClicked = bool => {
+    setCreateButtonClicked(bool);
+  };
 
   return (
     <>
-      <h1 className="my-4">Shop Name</h1>
-      <Modal buttonState={disabled}>
-        <MovieCreateForm disableButton={disableButton} />
+      <h1 className="my-4">Movie App</h1>
+      <Modal createButtonClicked={createButtonClicked}>
+        <MovieCreateForm
+          handleCreateMovie={handleCreateMovie}
+          handleButtonClicked={handleButtonClicked}
+        />
       </Modal>
       <div className="list-group">
         {categories.map(category => (

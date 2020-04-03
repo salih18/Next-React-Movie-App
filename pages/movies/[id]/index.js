@@ -1,16 +1,25 @@
-import { useRouter } from "next/router";
-import { getMovieById } from "./../../actions";
+import Link from 'next/link'
+import { getMovieById, removeById } from "./../../../actions";
+import {useRouter} from 'next/router'
 
 const Movie = ({
   movie: { id, name, releaseYear, description, rating, genre, image }
 }) => {
+
+  const router = useRouter()
+
+  const handleRemove = async() => {
+    await removeById(id)
+    router.push('/')
+  }
+
   const genresArr = () => {
     return genre.map((genre, key) => (
       <p className="badge badge-secondary p-2 m-1" key={key}>
         {genre}
       </p>
     ));
-  };
+  }; 
 
   return (
     <div className="container">
@@ -25,9 +34,14 @@ const Movie = ({
         <img className="img-fluid rounded m-5 mx-auto" src={image} alt="" />
         <p className="lead">{description}</p>
         <hr className="my-4" />
-        <a className="btn btn-primary btn-lg" href="#" role="button">
-          Learn more
-        </a>
+        <div className="d-flex justify-content-between">
+          <button className="btn btn-primary ">More...</button>
+          <button onClick={handleRemove} className="btn btn-danger ">Remove</button>
+          <Link href="/movies/[id]/edit" as={`/movies/${id}/edit`}>
+          <button className="btn btn-warning ">Edit</button>
+          </Link>
+        </div>
+
         <div className="mt-5">{genresArr()}</div>
       </div>
     </div>
